@@ -22,7 +22,7 @@ Final Project Udacity Details
 
 7.Scripts/deployment.yml Deploying App to AWS
 
-8. run_docker.sh, run_kubernetes, upload_docker local check support copies
+8. run_docker.sh, run_kubernetes, upload_docker, Make file local check support copies
 
 ******************Complete******************
 
