@@ -1,89 +1,41 @@
 pipeline {
-	agent any
-	stages {
-
-		stage('Lint HTML') {
-			steps {
-				sh 'tidy -q -e *.html'
-			}
-		}
-		
-		stage('Build Docker Image') {
-			steps {
-				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]){
-					sh '''
-						docker build -t kuldeeprana/udacapstone .
-					'''
-				}
-			}
-		}
-
-		stage('Push Image To Dockerhub') {
-			steps {
-				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]){
-					sh '''
-						docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-						docker push kuldeeprana/udacapstone
-					'''
-				}
-			}
-		}
-
-		stage('Set current kubectl context') {
-			steps {
-	//			withAWS(region:'us-east-1', credentials:'uda_aws') {
-	//				sh '''
-	//					kubectl config use-context arn:aws:eks:us-east-1:142977788479:cluster/udacapstonecluster
-	//				'''
-				}
-			}
-		}
-
-		stage('Deploy blue container') {
-			steps {
-		//		withAWS(region:'us-east-1', credentials:'uda_aws') {
-		//			sh '''
-		//				kubectl apply -f ./blue-controller.json
-		//			'''
-				}
-			}
-		}
-
-		stage('Deploy green container') {
-			steps {
-		//		withAWS(region:'us-east-1', credentials:'uda_aws') {
-		//			sh '''
-		//				kubectl apply -f ./green-controller.json
-		//			'''
-				}
-			}
-		}
-
-		stage('Create the service in the cluster, redirect to blue') {
-			steps {
-		//		withAWS(region:'us-east-1', credentials:'uda_aws') {
-		//			sh '''
-		//				kubectl apply -f ./blue-service.json
-		//			'''
-				}
-			}
-		}
-
-		stage('Wait user approve') {
-            steps {
-                input "Ready to redirect traffic to green?"
-            }
+     agent any
+     stages {
+         stage('Build') {
+              steps {
+                  sh 'echo Building...'
+              }
+         }
+         stage('Lint HTML') {
+              steps {
+                  sh 'tidy -q -e *.html'
+              }
+         }
+         stage('Build Docker Image') {
+              steps {
+				  sh 'echo Building...'
+                  //sh 'docker build -t capstone-project-cloud-devops .'
+              }
+         }
+         stage('Push Docker Image') {
+              steps {
+				  sh 'echo Building...'
+                  //withDockerRegistry([url: "", credentialsId: "DockerHub_Kuldeep"]) {
+                  //    sh "docker tag capstone-project-cloud-devops kuldeeprana/udacapstone"
+                  //    sh 'docker push kuldeeprana/udacapstone'                 }
+              }
+         }
+         stage('Deploying') {
+              steps{
+                  echo 'Deploying to AWS...'
+                   }
+              }
         }
-
-		stage('Create the service in the cluster, redirect to green') {
-			steps {
-			//	withAWS(region:'us-east-1', credentials:'uda_aws') {
-			//		sh '''
-			//			kubectl apply -f ./green-service.json
-			//		'''
-				}
-			}
-		}
-
-	}
+        stage("Cleaning up") {
+              steps{
+                    echo 'Cleaning up...'
+                  //  sh "docker system prune"
+              }
+        }
+     }
 }
