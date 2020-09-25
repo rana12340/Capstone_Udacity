@@ -14,15 +14,15 @@ pipeline {
 		stage('Build Docker Image') {
 			steps {
 				sh 'echo Building...'
-				//sh 'docker build -t capstone-project-cloud-devops .'
+				sh 'docker build -t capstone-project-cloud-devops .'
 			}
 		}
 		stage('Push Docker Image') {
 			steps {
 				sh 'echo Building...'
-				//withDockerRegistry([url: "", credentialsId: "DockerHub_Kuldeep"]) {
-				//    sh "docker tag capstone-project-cloud-devops kuldeeprana/udacapstone"
-				//    sh 'docker push kuldeeprana/udacapstone'                 }
+				withDockerRegistry([url: "", credentialsId: "DockerHub_Kuldeep"]) {
+				    sh "docker tag capstone-project-cloud-devops kuldeeprana/udacapstone"
+				    sh 'docker push kuldeeprana/udacapstone'                 }
 			}
 		}
 		stage('Deploying') {
